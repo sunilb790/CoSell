@@ -32,3 +32,12 @@ class Product(models.Model):
 
     def __str__(self):
         return f'Id is {self.Id} Name is {self.Name}'
+
+class FAQ(models.Model):
+    Id = models.ForeignKey(User, on_delete=models.CASCADE)
+    User_Name = models.CharField(max_length=30)
+    Query =  models.TextField(max_length=200)
+    Answer = models.TextField(max_length=200)
+
+    def __str__(self):
+        return self.Answer
