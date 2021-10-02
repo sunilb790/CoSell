@@ -3,10 +3,22 @@ from django.contrib.auth.models import User
 from datetime import datetime
 from django.utils import timezone
 
+
 class Student(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     Premium = models.BooleanField(default=False)
     MobileNumber = models.CharField(max_length=10)
+
+    class college_list(models.Model):
+        COLLEGE_CHOICES = [
+            ('IIITV', 'Indian Institute of Information Technology Vadodara (Gandhinagar Campus)'),
+            ('IITB', 'Indian Institute of Technology Bombay'),
+            ('IIITL', 'Indian Institute of Information Technology Lucknow'),
+            ('IITK', 'Indian Institute of Technology Kanpur'),
+            ('GEC', 'Government Engineering College,Gandhinagar'),
+        ]
+    college = models.CharField(
+        max_length=5, choices=college_list.COLLEGE_CHOICES)
 
     def __str__(self):
         return self.user.username
@@ -21,23 +33,41 @@ class Payment(models.Model):
     def __str__(self):
         return self.transection_id
 
+
 class Product(models.Model):
-    Id= models.AutoField(primary_key=True) #  Not Using default id provided by Django
+    # Not Using default id provided by Django
+    Id = models.AutoField(primary_key=True)
     Name = models.CharField(max_length=100)
-    Description = models.TextField(blank=False) #Description is must
-    Price =  models.DecimalField(max_digits=10,decimal_places=2)
-    DateTime=models.DateTimeField(default=timezone.now) #Date once added cannot be changed
+    Description = models.TextField(blank=False)  # Description is must
+    Price = models.DecimalField(max_digits=10, decimal_places=2)
+    # Date once added cannot be changed
+    DateTime = models.DateTimeField(default=timezone.now)
     SellerInfo = models.ForeignKey(Student, on_delete=models.CASCADE)
-    Photo = models.ImageField(default='NotsetDefaultPicture.jpg',upload_to='profile_pics')
+    Photo = models.ImageField(
+        default='NotsetDefaultPicture.jpg', upload_to='profile_pics')
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'Id is {self.Id} Name is {self.Name}'
 
+
 class FAQ(models.Model):
-    Id = models.ForeignKey(User, on_delete=models.CASCADE)
-    User_Name = models.CharField(max_length=30)
-    Query =  models.TextField(max_length=200)
+    Id = models.AutoField(primary_key=True)
+    UserName = models.ForeignKey(User, on_delete=models.CASCADE)
+    DateTime = models.DateTimeField(default=timezone.now)
+    Query = models.TextField(max_length=200)
     Answer = models.TextField(max_length=200)
 
     def __str__(self):
         return self.Answer
+
+
+class SellerBuyer(models.Model):
+    seller = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="seller_set")
+    buyer = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="buyer_set")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.seller} : {self.buyer} : {self.product}'
