@@ -9,9 +9,17 @@
 </head>
 
 <body>
-    <h1>Welcome</h1>
+    <h1>Register</h1>
 
-    <a href="{% url 'logout' %}">Logout</a>
+    <form action="" method="POST">
+
+        {% csrf_token %}
+
+        {{userform.as_p}}
+        {{studentform.as_p}}
+
+        <button type="submit">Register</button>
+    </form>
 </body>
 
 </html>
