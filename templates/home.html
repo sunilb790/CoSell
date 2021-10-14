@@ -1,17 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block content %}
+<h1>Products On Sale by You</h1>
+    {% for product in products %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{% url 'user-college-products' product.SellerInfo.user.username %}">Seller : {{ product.SellerInfo.user.username }}</a>
+              <small class="text-muted">{{ product.DateTime|date:"F d, Y" }}</small>
+            </div>
+            <div>
+              <img style="float: right" class="rounded-circle account-img" src="{{ product.Photo.url }}">
+              <h2 ><a class="article-title" href="{% url 'product-detail' product.pk %}">{{ product.Name}}</a></h2>
+              <p class="article-content">{{ product.Description }}</p>
+            </div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <h1>Welcome</h1>
-
-    <a href="{% url 'logout' %}">Logout</a>
-</body>
-
-</html>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
