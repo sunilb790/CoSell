@@ -15,6 +15,8 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
+
+
 def index(request):
     return render(request, 'index.html')
 
@@ -83,38 +85,45 @@ def login_user(request):
     return render(request, 'login.html', context)
 
 
-class PostListView(LoginRequiredMixin,ListView):
+class PostListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = '../templates/home.html'  # <app>/<model>_<viewtype>.html
     context_object_name = 'products'
     ordering = ['-DateTime']
 
-class PostDetailView(LoginRequiredMixin,DetailView):
+
+class PostDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = '../templates/productdetail.html'
+
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Product
     template_name = '../templates/Product_form.html'
-    fields = ['Name', 'Description','Price','DateTime','Photo']
+    fields = ['Name', 'Description', 'Price', 'DateTime', 'Photo']
 
     def form_valid(self, form):
-        form.instance.SellerInfo = Student.objects.filter(user=self.request.user).first()
+        form.instance.SellerInfo = Student.objects.filter(
+            user=self.request.user).first()
         return super().form_valid(form)
-        
-class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin, UpdateView):
+
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
     template_name = '../templates/Product_form.html'
-    fields = ['Name', 'Description','Price','DateTime','Photo']
+    fields = ['Name', 'Description', 'Price', 'DateTime', 'Photo']
 
     def form_valid(self, form):
-        form.instance.SellerInfo = Student.objects.filter(user=self.request.user).first()
+        form.instance.SellerInfo = Student.objects.filter(
+            user=self.request.user).first()
         return super().form_valid(form)
+
     def test_func(self):
         product = self.get_object()
         if self.request.user == product.SellerInfo.user:
             return True
         return False
+
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
@@ -127,14 +136,17 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
 
+
 class UserPostListView(ListView):
     model = Product
-    template_name = '../templates/user_college_product.html'  # <app>/<model>_<viewtype>.html
+    # <app>/<model>_<viewtype>.html
+    template_name = '../templates/user_college_product.html'
     context_object_name = 'products'
 
     def get_queryset(self):
         user1 = get_object_or_404(User, username=self.kwargs.get('username'))
         return Product.objects.filter(SellerInfo__college=Student.objects.filter(user=user1).first().college).order_by('-DateTime')
+
 
 def error(request):
     return render(request, 'error.html')
@@ -143,11 +155,12 @@ def error(request):
 @login_required
 def logout_user(request):
     logout(request)
-    return render(request,'logout.html')
+    return render(request, 'logout.html')
+
 
 @login_required
 def profile(request):
-    return render(request,'profile.html')
+    return render(request, 'profile.html')
 
 
 @login_required
@@ -173,3 +186,7 @@ def profile(request):
     }
 
     return render(request, 'profile.html', context)
+
+
+def pay(request):
+    return render(request, 'payment.html')
