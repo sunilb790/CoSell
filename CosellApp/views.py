@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from .forms import UserForm, StudentForm
-from .models import Student, Product
+from .models import Student, Product, Payment
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+import razorpay
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
@@ -188,5 +191,37 @@ def profile(request):
     return render(request, 'profile.html', context)
 
 
-def pay(request):
-    return render(request, 'payment.html')
+def payment(request):
+    if request.method == "POST":
+        amount = request.POST.get('amount')
+        client = razorpay.Client(
+            auth=("rzp_test_9bGYWCeBA8FVtd", "YdFIwXt49ZQdXdxkZGRvlTmN"))
+        current_Product = Product.objects.get(
+            Id=request.POST.get('Product_id'))
+        Product_price = current_Product.Price
+
+        Total_amount = 0.07*Product_price
+
+        payment_obj = Payment()
+        payment_obj.transection_id = current_Product.DateTime
+        payment_obj.Amount_paid = round(Total_amount, 2)
+        payment_obj.Date = current_Product.DateTime
+        payment_obj.Student_Info = Student.objects.get(user=request.user)
+        payment_obj.save()
+
+        return redirect('success_take')
+
+    current_Product = Product.objects.get(Id=request.GET.get('ProductId'))
+
+    Total_amount = 0.07*current_Product.Price
+    print(current_Product.Name)
+
+    context = {'Product_id': request.GET.get('ProductId'), 'Product_name': current_Product.Name, 'Product_desc': current_Product.Description,
+               'Product_date': current_Product.DateTime, 'Product_price': current_Product.Price, 'Total_amount': round(Total_amount, 2), 'Product_image': current_Product.Photo}
+
+    return render(request, 'payment.html', context)
+
+
+@csrf_exempt
+def success_take(request):
+    return HttpResponse("success payment meethod")
