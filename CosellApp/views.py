@@ -196,6 +196,7 @@ def payment(request):
         amount = request.POST.get('amount')
         client = razorpay.Client(
             auth=("rzp_test_9bGYWCeBA8FVtd", "YdFIwXt49ZQdXdxkZGRvlTmN"))
+
         current_Product = Product.objects.get(
             Id=request.POST.get('Product_id'))
         Product_price = current_Product.Price
@@ -203,7 +204,8 @@ def payment(request):
         Total_amount = 0.07*Product_price
 
         payment_obj = Payment()
-        payment_obj.transection_id = current_Product.DateTime
+        payment_obj.transection_id = str(
+            current_Product.DateTime) + request.user.username
         payment_obj.Amount_paid = round(Total_amount, 2)
         payment_obj.Date = current_Product.DateTime
         payment_obj.Student_Info = Student.objects.get(user=request.user)
