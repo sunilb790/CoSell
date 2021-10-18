@@ -1,24 +1,33 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <article class="media content-section">
   <div class="media-body">
     <div class="article-metadata">
-      <a class="mr-2" href="{%url 'user-college-products' object.SellerInfo.user.username %}">Seller : {{ object.SellerInfo.user.username }}</a>
+      <a class="mr-2" href="{%url 'user-college-products' object.SellerInfo.user.username %}"
+        >Seller : {{ object.SellerInfo.user.username }}</a
+      >
       <small class="text-muted">{{ object.DateTime|date:"F d, Y" }}</small>
     </div>
 
     <div>
-      <img style="float: right" class="rounded-circle account-img" src="{{ object.Photo.url }}">
+      <img style="float: right" class="rounded-circle account-img" src="{{ object.Photo.url }}" />
       <h2 class="article-title">{{ object.Name}}</h2>
       <p class="article-content">{{ object.Description }}</p>
     </div>
     {% if object.SellerInfo.user == user %}
     <div>
-      <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'product-update' object.pk %}">Update</a>
-      <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'product-delete' object.pk %}">Delete</a>
+      <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'product-update' object.pk %}"
+        >Update</a
+      >
+      <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'product-delete' object.pk %}"
+        >Delete</a
+      >
+
+      <form action="http://127.0.0.1:8000/payment" method="GET">
+        <input type="hidden" name="ProductId" value="{{object.Id}}" />
+        <button class="btn btn-outline-info" type="submit">Paymet</button>
+      </form>
     </div>
     {% endif %}
   </div>
-
 </article>
 {% endblock content %}

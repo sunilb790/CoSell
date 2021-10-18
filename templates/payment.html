@@ -1,15 +1,134 @@
 <!DOCTYPE html>
-<html lang="en">
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Payment</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      #sel_bike1,
+      #sel_bike2,
+      #sel_bike3,
+      #amount {
+        display: none;
+      }
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+      body {
+        margin: 0;
+        padding: 0;
+        background: url(../../static/three.jpg) no-repeat;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: black;
+      }
 
-<body>
-    <h1>GOOD</h1>
-</body>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 80%;
+        margin-left: 10%;
+        margin-bottom: 20px;
+        margin-top: 20px;
+      }
 
+      td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 10px 0 10px 20px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+
+      tr:nth-child(odd) {
+        background-color: #dddd;
+      }
+    </style>
+  </head>
+  <body>
+    <center>
+      <h1 style="color: white; padding-top: 30px">Payment details</h1>
+
+      <div
+        style="
+          text-align: center;
+          margin-top: 30px;
+          margin-bottom: 50px;
+          height: 400px;
+          width: 550px;
+          background: #69207b;
+          border-radius: 5px;
+        "
+      >
+        <p
+          style="
+            font-size: 30px;
+            margin: 0 0 20px 0;
+            margin-top: 40px;
+            text-align: center;
+            color: white;
+            padding-top: 20px;
+          "
+        >
+          You are paying 7% fees of product price
+        </p>
+
+        <table>
+          <tr>
+            <td>Product Name</td>
+            <td>{{Product_name}}</td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>{{Product_desc}}</td>
+          </tr>
+          <tr>
+            <td>Listing Price</td>
+            <td>{{Product_price}}</td>
+          </tr>
+          <tr>
+            <td>Listing Date</td>
+            <td>{{Product_date}}</td>
+          </tr>
+          <tr>
+            <td>Product Image</td>
+            <td>{{Product_image}}</td>
+          </tr>
+
+          <tr>
+            <td>Total Amount</td>
+            <td>{{Total_amount}}</td>
+          </tr>
+        </table>
+
+        <form action="" method="POST">
+          {% csrf_token %}
+          <input type="text" value="{{Total_amount}}" name="amount" id="amount" />
+          <input type="hidden" value="{{Product_id}}" name="Product_id" id="Product_id" />
+          <!-- RAZORPAY INTEGRATION HERE -->
+          <script
+            src="https://checkout.razorpay.com/v1/checkout.js"
+            data-key="rzp_test_9bGYWCeBA8FVtd"
+            data-amount="{% widthratio Total_amount 1 100%}"
+            data-currency="INR"
+            data-order_id="{{payment.id}}"
+            data-buttontext="Make Payment"
+            data-name="Cosell"
+            data-description="Payment for {{Product_name}}"
+            data-image="https://i.pinimg.com/originals/e0/e9/b1/e0e9b132034a2977f88b322635acf523.png"
+            data-prefill.name="Online Cosell"
+            data-prefill.email="{{request.user.email}}"
+            data-theme.color="#6600ff"
+          ></script>
+        </form>
+      </div>
+    </center>
+  </body>
 </html>

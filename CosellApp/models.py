@@ -4,6 +4,8 @@ from datetime import datetime
 from django.utils import timezone
 from PIL import Image
 from django.urls import reverse
+
+
 class Student(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     Premium = models.BooleanField(default=False)
@@ -22,8 +24,10 @@ class Student(models.Model):
 
     def __str__(self):
         return self.user.username
+
     def getCollegeChoice(self):
         return self.college_list.COLLEGE_CHOICES
+
 
 class Payment(models.Model):
     transection_id = models.CharField(max_length=30)
@@ -40,18 +44,20 @@ class Product(models.Model):
     Id = models.AutoField(primary_key=True)
     Name = models.CharField(max_length=100)
     Description = models.TextField(blank=False)  # Description is must
-    Price = models.DecimalField(max_digits=10, decimal_places=2)
+    Price = models.PositiveIntegerField()
     # Date once added cannot be changed
     DateTime = models.DateTimeField(default=timezone.now)
     SellerInfo = models.ForeignKey(Student, on_delete=models.CASCADE)
     Photo = models.ImageField(
         default='Balti.jpg', upload_to='ProductImages')
-    payment = models.ForeignKey(Payment,null=True, on_delete=models.CASCADE)
+    payment = models.ForeignKey(Payment, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'Product Name : {self.Name} and Its Id : {self.Id} '
+
     def get_absolute_url(self):
-        return reverse('product-detail', kwargs={'pk': self.pk})   
+        return reverse('product-detail', kwargs={'pk': self.pk})
+
 
 class FAQ(models.Model):
     Id = models.AutoField(primary_key=True)
@@ -73,16 +79,16 @@ class SellerBuyer(models.Model):
 
     def __str__(self):
         return f'{self.seller} : {self.buyer} : {self.product}'
-from django.db import models
-from django.contrib.auth.models import User
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(default='Resume_image.jpeg', upload_to='profile_pics')
+    image = models.ImageField(
+        default='Resume_image.jpeg', upload_to='profile_pics')
 
     def __str__(self):
         return f'{self.user.username} Profile'
+
     def save(self, *args, **kwargs):
         super(Profile, self).save(*args, **kwargs)
 
