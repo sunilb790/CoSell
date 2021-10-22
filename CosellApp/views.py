@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import UserForm, StudentForm
-from .models import Student, Product, Payment
+from .models import FAQ, Student, Product, Payment
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 import razorpay
@@ -227,3 +227,31 @@ def payment(request):
 @csrf_exempt
 def success_take(request):
     return HttpResponse("success payment meethod")
+
+
+@login_required
+def faq_ask(request):
+    if request.method == "POST":
+        Query = request.POST.get('Query')
+        # context = {
+        #     'Query': Query
+        # }
+        faq = FAQ()
+        faq.UserName = request.user
+        faq.Query = Query
+        faq.save()
+        return redirect('faq')
+    return render(request, 'faq_ask.html')
+    #return render(request, 'faq_ask.html')
+        # faq_obj = FAQ()
+        # faq_obj.Id = request.POST.get('username')
+        # faq_obj.Answer
+
+def faq(request):
+    faqs = FAQ.objects.all()
+    # User_Info = FAQ.objects.all()
+    # Answer = User_Info.Answer
+    context = {
+         'faqs': faqs,
+     }
+    return render(request, 'faq.html', context)

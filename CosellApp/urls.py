@@ -20,4 +20,6 @@ urlpatterns = [
     path('product/new/', PostCreateView.as_view(), name='product-create'),
     path('error', views.error, name='error'),
     path('success_take/', views.success_take, name='success_take'),
+    path('faq', views.faq, name='faq'),
+    path('faq_ask', views.faq_ask, name="faq_ask"),
 ]
