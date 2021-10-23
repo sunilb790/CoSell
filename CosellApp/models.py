@@ -64,10 +64,10 @@ class FAQ(models.Model):
     UserName = models.ForeignKey(User, on_delete=models.CASCADE)
     DateTime = models.DateTimeField(default=timezone.now)
     Query = models.TextField(max_length=200)
-    Answer = models.TextField(max_length=200)
+    Answer = models.TextField(max_length=200, blank=True)
 
     def __str__(self):
-        return self.Answer
+        return f'{self.UserName} | Query : {self.Query}'
 
 
 class SellerBuyer(models.Model):

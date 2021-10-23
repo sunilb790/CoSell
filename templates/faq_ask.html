@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1> Ask Your Questions Here!</h1> <br> <br>
+{% comment %} <form action="" method="POST">
+          {% csrf_token %}
+          <input type="text" name="Query"/>
+          <button type="submit">Ask</button>
+</form> {% endcomment %}
+
+
+<form action="" method="POST">
+          {% csrf_token %}
+  <!-- Message input -->
+  <div class="form-outline mb-4">
+    <input type="textarea" name="Query" class="form-control" rows="4"></textarea>
+    <label class="form-label">Please enter relavant questions</label>
+  </div>
+
+  <!-- Checkbox -->
+  {% comment %} <div class="form-check d-flex justify-content-center mb-4">
+    <input
+      class="form-check-input me-2"
+      type="checkbox"
+      name="Query"
+      checked
+    />
+    <label class="form-check-label" for="form4Example4">
+      Send me a copy of this message
+    </label>
+  </div> {% endcomment %}
+
+  <!-- Submit button -->
+  <button type="submit" class="btn btn-primary btn-block mb-4">Ask</button>
+</form>
+{% comment %} <h1> {{Query}} </h1> {% endcomment %}
+
+{% endblock content %}
