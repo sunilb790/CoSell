@@ -3,7 +3,8 @@ from . import views
 from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, UserPostListView
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    #     path('', views.index, name='index'),
+    path('', PostListView.as_view(), name='home'),
     path('user/<str:username>/', UserPostListView.as_view(),
          name='user-college-products'),
     path('register', views.register_user, name='register'),
@@ -11,7 +12,6 @@ urlpatterns = [
     path('logout', views.logout_user, name='logout'),
     path('payment', views.payment, name='pay'),
     path('profile', views.profile, name='profile'),
-    path('home', PostListView.as_view(), name='home'),
     path('product/<int:pk>/', PostDetailView.as_view(), name='product-detail'),
     path('product/<int:pk>/update/',
          PostUpdateView.as_view(), name='product-update'),
@@ -22,4 +22,5 @@ urlpatterns = [
     path('success_take/', views.success_take, name='success_take'),
     path('faq', views.faq, name='faq'),
     path('faq_ask', views.faq_ask, name="faq_ask"),
+    path('about', views.about, name="about"),
 ]

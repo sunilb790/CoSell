@@ -18,6 +18,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
+from django.db.models import Q
 
 
 def index(request):
@@ -92,7 +93,12 @@ class PostListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = '../templates/home.html'  # <app>/<model>_<viewtype>.html
     context_object_name = 'products'
-    ordering = ['-DateTime']
+
+    def get_queryset(self):
+        user = self.request.user
+        sd = Student.objects.get(user=user)
+        collage = sd.college
+        return Product.objects.filter(~Q(payment=None), SellerInfo__college=collage).order_by('-DateTime')
 
 
 class PostDetailView(LoginRequiredMixin, DetailView):
@@ -155,18 +161,18 @@ def error(request):
     return render(request, 'error.html')
 
 
-@login_required
+@login_required(login_url='error')
 def logout_user(request):
     logout(request)
     return render(request, 'logout.html')
 
 
-@login_required
+@login_required(login_url='error')
 def profile(request):
     return render(request, 'profile.html')
 
 
-@login_required
+@login_required(login_url='error')
 def profile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
@@ -191,6 +197,7 @@ def profile(request):
     return render(request, 'profile.html', context)
 
 
+@login_required(login_url='error')
 def payment(request):
     if request.method == "POST":
         amount = request.POST.get('amount')
@@ -211,6 +218,9 @@ def payment(request):
         payment_obj.Student_Info = Student.objects.get(user=request.user)
         payment_obj.save()
 
+        current_Product.payment = payment_obj
+        current_Product.save()
+
         return redirect('success_take')
 
     current_Product = Product.objects.get(Id=request.GET.get('ProductId'))
@@ -226,10 +236,10 @@ def payment(request):
 
 @csrf_exempt
 def success_take(request):
-    return HttpResponse("success payment meethod")
+    return redirect('home')
 
 
-@login_required
+@login_required(login_url='error')
 def faq_ask(request):
     if request.method == "POST":
         Query = request.POST.get('Query')
@@ -242,16 +252,32 @@ def faq_ask(request):
         faq.save()
         return redirect('faq')
     return render(request, 'faq_ask.html')
-    #return render(request, 'faq_ask.html')
-        # faq_obj = FAQ()
-        # faq_obj.Id = request.POST.get('username')
-        # faq_obj.Answer
+    # return render(request, 'faq_ask.html')
+    # faq_obj = FAQ()
+    # faq_obj.Id = request.POST.get('username')
+    # faq_obj.Answer
+
 
 def faq(request):
     faqs = FAQ.objects.all()
     # User_Info = FAQ.objects.all()
     # Answer = User_Info.Answer
     context = {
-         'faqs': faqs,
-     }
+        'faqs': faqs,
+    }
     return render(request, 'faq.html', context)
+
+
+def about(request):
+    return render(request, 'about.html')
+
+
+''' 
+
+Tapan : Filter
+Tushar : Profile
+Mohit : FAQ bugs
+Sunil : About page
+Shubham + Mohit + Sunil : Chat(Devang)
+
+'''

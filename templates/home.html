@@ -1,20 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Products On Sale by You</h1>
-    {% for product in products %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="{% url 'user-college-products' product.SellerInfo.user.username %}">Seller : {{ product.SellerInfo.user.username }}</a>
-              <small class="text-muted">{{ product.DateTime|date:"F d, Y" }}</small>
-            </div>
-            <div>
-              <img style="float: right" class="rounded-circle account-img" src="{{ product.Photo.url }}">
-              <h2 ><a class="article-title" href="{% url 'product-detail' product.pk %}">{{ product.Name}}</a></h2>
-              <p class="article-content">{{ product.Description }}</p>
-            </div>
+{% for product in products %}
+<article class="media content-section">
+  <div class="media-body">
+    <div class="article-metadata">
+      <a class="mr-2" href="{% url 'user-college-products' product.SellerInfo.user.username %}">Seller :
+        {{product.SellerInfo.user.username }}</a>
+      <small class="text-muted">{{ product.DateTime|date:"F d, Y" }}</small>
+    </div>
+    <div>
+      <img style="float: right" class="rounded-circle account-img" src="{{ product.Photo.url }}">
+      <h2><a class="article-title" href="{% url 'product-detail' product.pk %}">{{ product.Name}}</a></h2>
+      <p class="article-content">Description : {{ product.Description }}</p>
+    </div>
 
-          </div>
-        </article>
-    {% endfor %}
+
+    Price : {{product.Price}}
+  </div>
+</article>
+{% endfor %}
 {% endblock content %}
