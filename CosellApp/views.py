@@ -88,17 +88,54 @@ def login_user(request):
     return render(request, 'login.html', context)
 
 
-class PostListView(LoginRequiredMixin, ListView):
-    model = Product
-    template_name = '../templates/home.html'  # <app>/<model>_<viewtype>.html
-    context_object_name = 'products'
-    paginate_by=3
+# class PostListView(LoginRequiredMixin, ListView):
+#     model = Product
+#     template_name = '../templates/home.html'  # <app>/<model>_<viewtype>.html
+#     context_object_name = 'products'
+#     paginate_by = 3
 
-    def get_queryset(self):
-        user = self.request.user
+#     def get_queryset(self):
+#         user = self.request.user
+#         sd = Student.objects.get(user=user)
+#         collage = sd.college
+#         return Product.objects.filter(~Q(payment=None), SellerInfo__college=collage).order_by('-DateTime')
+
+@login_required(login_url='error')
+def home(request):
+
+    a = request.GET.get('filter')
+
+    if a == None or a == '0':
+        paginate_by = 3
+        user = request.user
         sd = Student.objects.get(user=user)
         collage = sd.college
-        return Product.objects.filter(~Q(payment=None), SellerInfo__college=collage).order_by('-DateTime')
+        products = Product.objects.filter(
+            ~Q(payment=None), SellerInfo__college=collage).order_by('-DateTime')
+
+        context = {
+            'products': products,
+            'a': 1
+        }
+        return render(request, 'home.html', context)
+
+    else:
+        b = a.split('-')
+
+        low = b[0]
+        high = b[1]
+
+        user = request.user
+        sd = Student.objects.get(user=user)
+        collage = sd.college
+        products = Product.objects.filter(
+            ~Q(payment=None), SellerInfo__college=collage, Price__gte=low, Price__lte=high).order_by('-DateTime')
+
+        context = {
+            'products': products, 'a': 1
+        }
+
+        return render(request, 'home.html', context)
 
 
 class PostDetailView(LoginRequiredMixin, DetailView):
@@ -157,7 +194,6 @@ class UserPostListView(ListView):
         return Product.objects.filter(SellerInfo__college=Student.objects.filter(user=user1).first().college).order_by('-DateTime')
 
 
-
 def error(request):
     return render(request, 'error.html')
 
@@ -189,11 +225,12 @@ def profile(request):
     else:
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
-        products=Product.objects.all().filter(SellerInfo=Student.objects.get(user=request.user)).order_by('-DateTime')
+        products = Product.objects.all().filter(
+            SellerInfo=Student.objects.get(user=request.user)).order_by('-DateTime')
     context = {
         'u_form': u_form,
         'p_form': p_form,
-        'products':products
+        'products': products
     }
 
     return render(request, 'profile.html', context)
@@ -228,7 +265,6 @@ def payment(request):
     current_Product = Product.objects.get(Id=request.GET.get('ProductId'))
 
     Total_amount = 0.07*current_Product.Price
-    print(current_Product.Name)
 
     context = {'Product_id': request.GET.get('ProductId'), 'Product_name': current_Product.Name, 'Product_desc': current_Product.Description,
                'Product_date': current_Product.DateTime, 'Product_price': current_Product.Price, 'Total_amount': round(Total_amount, 2), 'Product_image': current_Product.Photo}
