@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from .forms import UserUpdateForm, ProfileUpdateForm
+from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import (
     ListView,
@@ -43,11 +44,9 @@ def register_user(request):
             user = userform.save()
             user.set_password(user.password)
             user.save()
-
             user_info = studentform.save(commit=False)
             user_info.user = user
             user_info.save()
-
             username = request.POST.get('username')
             password = request.POST.get('password')
 
@@ -93,6 +92,7 @@ class PostListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = '../templates/home.html'  # <app>/<model>_<viewtype>.html
     context_object_name = 'products'
+    paginate_by=3
 
     def get_queryset(self):
         user = self.request.user
@@ -157,6 +157,7 @@ class UserPostListView(ListView):
         return Product.objects.filter(SellerInfo__college=Student.objects.filter(user=user1).first().college).order_by('-DateTime')
 
 
+
 def error(request):
     return render(request, 'error.html')
 
@@ -167,9 +168,9 @@ def logout_user(request):
     return render(request, 'logout.html')
 
 
-@login_required(login_url='error')
-def profile(request):
-    return render(request, 'profile.html')
+# @login_required(login_url='error')
+# def profile(request):
+#     return render(request, 'profile.html')
 
 
 @login_required(login_url='error')
@@ -188,10 +189,11 @@ def profile(request):
     else:
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
-
+        products=Product.objects.all().filter(SellerInfo=Student.objects.get(user=request.user)).order_by('-DateTime')
     context = {
         'u_form': u_form,
-        'p_form': p_form
+        'p_form': p_form,
+        'products':products
     }
 
     return render(request, 'profile.html', context)
