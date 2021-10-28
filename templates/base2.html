@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+
+  {% if title %}
+  <title>Cosell - {{ title }}</title>
+  {% else %}
+  <title>Cosell</title>
+  {% endif %}
+
+
+<!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--Import materialize.css-->
+        <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.min.css' %}"  media="screen,projection"/>
+        <link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}"  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+      <!--Import jQuery before materialize.js-->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/chat.js' %}"></script>
+
+
+    <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/chat.js' %}"></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+      <div class="container">
+        <a class="navbar-brand mr-4" href="{% url 'home' %}">Cosell</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+          aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarToggle">
+          <div class="navbar-nav mr-auto">
+            <a class="nav-item nav-link" href="{% url 'home' %}">Home</a>
+            <a class="nav-item nav-link" href="{% url 'about' %}">About</a>
+            <a class="nav-item nav-link" href="{% url 'recivedMessages' %}">Recived messages</a>
+            <a class="nav-item nav-link" href="{% url 'faq' %}">FAQs</a>
+
+          </div>
+          <!-- Navbar Right Side -->
+          <div class="navbar-nav">
+            {% if user.is_authenticated %}
+            <a class="nav-item nav-link" href="{% url 'product-create' %}">Add Your Products</a>
+            <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+            <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+            <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+            <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main role="main" class="container">
+   <div class="row">
+        {% block content %}{% endblock %}
+      </div>
+
+
+      {% if a %}
+
+      <div class="col-md-4">
+        <div class="content-section">
+          <h3>Filter</h3>
+          <p class='text-muted'>You can try any filter here you'd like.
+          <ul class="list-group">
+            <!-- <li class="list-group-item list-group-item-light">Latest Products</li>
+                  <li class="list-group-item list-group-item-light">Announcements</li>
+                  <li class="list-group-item list-group-item-light">Calendars</li>
+                  <li class="list-group-item list-group-item-light">etc</li> -->
+
+            <form action="" method="GET">
+
+              <select class="list-group-item list-group-item-light" name="filter" id="filter">
+                <option class="list-group-item list-group-item-light" value="0">----</option>
+                <option class="list-group-item list-group-item-light" value="1-50">1 - 50</option>
+                <option class="list-group-item list-group-item-light" value="51-100">51 - 100</option>
+                <option class="list-group-item list-group-item-light" value="101-200">101 - 200</option>
+                <option class="list-group-item list-group-item-light" value="201-500">201 - 500</option>
+                <option class="list-group-item list-group-item-light" value="501-1000">501 - 1000</option>
+                <option class="list-group-item list-group-item-light" value="1000-10000000">1000+</option>
+              </select>
+
+
+
+              <button type="submit">Serach</button>
+
+            </form>
+          </ul>
+          </p>
+        </div>
+      </div>
+
+      {% else %}
+
+      
+
+      {% endif %}
+
+
+
+    </div>
+  </main>
+</body>
+
+</html>
