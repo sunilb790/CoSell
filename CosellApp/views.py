@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from .forms import UserForm, StudentForm
-from .models import FAQ, Student, Product, Payment
+from .models import FAQ, Student, Product, Payment, Message
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 import razorpay
-from django.http import HttpResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -20,6 +20,8 @@ from django.views.generic import (
     DeleteView
 )
 from django.db.models import Q
+from .serializers import MessageSerializer, UserSerializer
+from rest_framework.parsers import JSONParser
 
 
 def index(request):
@@ -310,12 +312,49 @@ def about(request):
     return render(request, 'about.html')
 
 
-''' 
+@csrf_exempt
+def message_list(request, sender=None, receiver=None):
+    """
+    List all required messages, or create a new message.
+    """
+    if request.method == 'GET':
+        messages = Message.objects.filter(
+            sender_id=sender, receiver_id=receiver, is_read=False)
+        serializer = MessageSerializer(
+            messages, many=True, context={'request': request})
+        for message in messages:
+            message.is_read = True
+            message.save()
+        return JsonResponse(serializer.data, safe=False)
 
-Tapan : Filter
-Tushar : Profile
-Mohit : FAQ bugs
-Sunil : About page
-Shubham + Mohit + Sunil : Chat(Devang)
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = MessageSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
 
-'''
+
+def message_view(request, sender, receiver):
+    if not request.user.is_authenticated:
+        return redirect('home')
+
+    return render(request, "messages.html",
+                  {'users': User.objects.exclude(username=request.user.username),
+                   'receiver': User.objects.get(id=receiver),
+                   'messages': Message.objects.filter(sender_id=sender, receiver_id=receiver) |
+                   Message.objects.filter(sender_id=receiver, receiver_id=sender)})
+
+
+def recivedMessages(request):
+    if not request.user.is_authenticated:
+        return redirect('home')
+    if request.method == "GET":
+        user = User.objects.exclude(username=request.user.username)
+        Msg = Message.objects.all()
+        for m in Msg:
+            print("-----------------------------------------------------")
+            print(m.message)
+        return render(request, 'chat2.html',
+                      {'users': user})

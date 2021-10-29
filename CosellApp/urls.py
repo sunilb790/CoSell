@@ -23,4 +23,9 @@ urlpatterns = [
     path('faq', views.faq, name='faq'),
     path('faq_ask', views.faq_ask, name="faq_ask"),
     path('about', views.about, name="about"),
+    path('chat/<int:sender>/<int:receiver>/', views.message_view, name='chat'),
+    path('api/messages/<int:sender>/<int:receiver>/',
+         views.message_list, name='message-detail'),
+    path('api/messages/', views.message_list, name='message-list'),
+    path('recivedMessages', views.recivedMessages, name='recivedMessages'),
 ]

@@ -12,7 +12,18 @@
       <img style="float: right" class="rounded-circle account-img" src="{{ object.Photo.url }}" />
       <h2 class="article-title">{{ object.Name}}</h2>
       <p class="article-content">{{ object.Description }}</p>
+      {% if object.SellerInfo.user != user %}
+      <a
+        href="{% url 'chat' request.user.id object.SellerInfo.user.id %}"
+        id="user{{ user.id }}"
+        class="collection-item row"
+      >
+        chat with seller
+        <div class="col s8"></div>
+      </a>
+      {% endif %}
     </div>
+
     {% if object.SellerInfo.user == user %}
     <div>
       <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'product-update' object.pk %}"
