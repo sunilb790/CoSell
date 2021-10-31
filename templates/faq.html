@@ -2,87 +2,76 @@
 
 {% block content %}
 
-
-<h2> Ask Your Question </h2>	  
+<h2> Ask Your Question </h2>
 <div class="center">
   <h5>Be a part of COSELL by aksing any of your Query, we will answer as soon as possible.<h5><br>
-  <a class="btnSub" href="{% url 'faq_ask' %}" style="text-decoration: none">
-    Ask Your Question
-  </a>
+      <a class="btnSub" href="{% url 'faq_ask' %}" style="text-decoration: none">
+        Ask Your Question
+      </a>
 </div>
 <br> <br>
 <h2>Frequently Asked Questions </h2> <br>
 {% for faq in faqs %}
-{% comment %} 
- <h1> {{faq.UserName}} </h1> <br>
- <h1> {{faq.Query}} </h1><br>
- <h1> {{faq.Answer}} </h1><br>
- <h1> {{faq.DateTime}} </h1> <br><br><br><br> {% endcomment %}
-
- <section class="accordion-section clearfix mt-3" aria-label="Question Accordions">
-  <div class="container">
-  
-	  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-		<div class="panel panel-default">
-		  <div class="panel-heading p-3 mb-3" role="tab" id="heading0">
-			<h3 class="panel-title">
-			  <a class="collapsed" role="button" title="" data-toggle="collapse" data-parent="#accordion" href="#collapse0" aria-expanded="true" aria-controls="collapse0">
-				{{faq.Query}}
-			  </a>
-			</h3>
-		  </div>
-		  <div id="collapse0" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading0">
-			<div class="panel-body px-3 mb-4">
-			  <p>{{faq.Answer}}</p> <br>
-              <h6> {{faq.DateTime}} </h6>
-			  {% comment %} <ul>
-				<li>Light speed deployment on the most secure and stable cloud infrastructure available on the market.</li>
-				<li>Scalability – pay for what you need today and add-on options as you grow.</li>
-				<li>All of the bells and whistles of other enterprise CMS options but without the design limitations - this CMS simply lets you realize your creative visions.</li>
-				<li>Amazing support backed by a team of Solodev pros – here when you need them.</li>
-			  </ul> {% endcomment %}
-			</div>
-		  </div>
-		</div>
+<details open>
+  <summary><strong>
+      {{faq.Query}}
+    </strong>
+  </summary>
+  <div>
+    {{faq.Answer}}
   </div>
-</section>
+</details>
 {% endfor %}
 
+
+
+{% comment %}
+<h1> {{faq.UserName}} </h1> <br>
+<h1> {{faq.Query}} </h1><br>
+<h1> {{faq.Answer}} </h1><br>
+<h1> {{faq.DateTime}} </h1> <br><br><br><br> {% endcomment %}
+
+{% comment %} <section class="accordion-section clearfix mt-3" aria-label="Question Accordions">
+  <div class="container">
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+        <div class="panel-heading p-3 mb-3" role="tab" id="heading0">
+          <h3 class="panel-title">
+            <a class="collapsed" role="button" title="" data-toggle="collapse" data-parent="#accordion"
+              href="#collapse0" aria-expanded="true" aria-controls="collapse0">
+              {{faq.Query}}
+            </a>
+          </h3>
+        </div>
+        <div id="collapse0" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading0">
+          <div class="panel-body px-3 mb-4">
+            <p>{{faq.Answer}}</p> <br>
+            <h6> {{faq.DateTime}} </h6>
+            {% comment %} <ul>
+              <li>Light speed deployment on the most secure and stable cloud infrastructure available on the market.
+              </li>
+              <li>Scalability – pay for what you need today and add-on options as you grow.</li>
+              <li>All of the bells and whistles of other enterprise CMS options but without the design limitations -
+                this CMS simply lets you realize your creative visions.</li>
+              <li>Amazing support backed by a team of Solodev pros – here when you need them.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+</section> {% endcomment %}
+
 <style>
-h2 {
+  h2 {
     font-family: Arial, Verdana;
     font-weight: 600;
     font-size: 2.0rem;
     color: #091f2f;
     text-transform: uppercase;
-}
-.accordion-section .panel-default > .panel-heading {
-    border: 0;
-    background: #f4f4f4;
-    padding: 0;
-}
-.accordion-section .panel-default .panel-title a {
-    display: block;
-    font-style: italic;
-    font-size: 1.5rem;
-}
-.accordion-section .panel-default .panel-title a:after {
-    font-family: 'FontAwesome';
-    font-style: normal;
-    font-size: 3rem;
-    content: "\f106";
-    color: #1f7de2;
-    float: right;
-    margin-top: -12px;
-}
-.accordion-section .panel-default .panel-title a.collapsed:after {
-    content: "\f107";
-}
-.accordion-section .panel-default .panel-body {
-    font-size: 1.2rem;
-}
+  }
 
-.btnSub {
+  .btnSub {
     padding: 10px 30px 10px 30px;
     color: #fff;
     background-color: #4bc970;
@@ -100,14 +89,103 @@ h2 {
   }
 
   .btnSub:hover {
-      color: white;
+    color: white;
     background: -webkit-linear-gradient(to right, #3E84C1 0%, #659DCD 100%);
     background: -moz-linear-gradient(to right, #3E84C1 0%, #659DCD 100%);
     background: linear-gradient(to right, #3E84C1 0%, #659DCD 100%);
   }
+
+
+  *,
+  *:after,
+  *:before {
+    box-sizing: border-box;
+  }
+
+  :root {
+    font-size: 16px;
+  }
+
+  *:focus {
+    outline: none;
+  }
+
+
+  details div {
+    border-left: 2px solid #000;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    padding: 1.5em;
+  }
+
+  details div>*+* {
+    margin-top: 1.5em;
+  }
+
+  details+details {
+    margin-top: .5rem;
+  }
+
+  summary {
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary {
+    border: 2px solid #000;
+    padding: .75em 1em;
+    cursor: pointer;
+    position: relative;
+    padding-left: calc(1.75rem + .75rem + .75rem);
+  }
+
+  summary:before {
+    background-color: #3E84C1;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: .75rem;
+    content: "↓";
+    width: 1.75rem;
+    height: 1.75rem;
+    color: #FFF;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  details[open] summary {
+    background-color: #D9DBDA;
+  }
+
+  details[open] summary:before {
+    content: "↑";
+    background-color: #3E84C1;
+  }
+
+  summary:hover {
+    background-color: #eee;
+  }
+
+  a {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 1px 0 0;
+  }
+
+  a:hover {
+    box-shadow: 0 3px 0 0;
+  }
+
+  code {
+    font-family: monospace;
+    font-weight: 600;
+  }
 </style>
-
-
-
 
 {% endblock content %}

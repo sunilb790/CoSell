@@ -2,9 +2,8 @@
 <article class="media content-section">
   <div class="media-body">
     <div class="article-metadata">
-      <a class="mr-2" href="{%url 'user-college-products' object.SellerInfo.user.username %}"
-        >Seller : {{ object.SellerInfo.user.username }}</a
-      >
+      Seller : {{ object.SellerInfo.user.username }}
+
       <small class="text-muted">{{ object.DateTime|date:"F d, Y" }}</small>
     </div>
 
@@ -13,11 +12,8 @@
       <h2 class="article-title">{{ object.Name}}</h2>
       <p class="article-content">{{ object.Description }}</p>
       {% if object.SellerInfo.user != user %}
-      <a
-        href="{% url 'chat' request.user.id object.SellerInfo.user.id %}"
-        id="user{{ user.id }}"
-        class="collection-item row"
-      >
+      <a href="{% url 'chat' request.user.id object.SellerInfo.user.id %}" id="user{{ user.id }}"
+        class="collection-item row">
         chat with seller
         <div class="col s8"></div>
       </a>
@@ -26,12 +22,8 @@
 
     {% if object.SellerInfo.user == user %}
     <div>
-      <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'product-update' object.pk %}"
-        >Update</a
-      >
-      <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'product-delete' object.pk %}"
-        >Delete</a
-      >
+      <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'product-update' object.pk %}">Update</a>
+      <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'product-delete' object.pk %}">Delete</a>
 
       <form action="http://127.0.0.1:8000/payment" method="GET">
         <input type="hidden" name="ProductId" value="{{object.Id}}" />

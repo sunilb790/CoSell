@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Products On Sale by You</h1>
+<h1>Products On Sales</h1>
 {% for product in products %}
 <article class="media content-section">
   <div class="media-body">
@@ -14,7 +14,6 @@
       <h2><a class="article-title" href="{% url 'product-detail' product.pk %}">{{ product.Name}}</a></h2>
       <p class="article-content">Description : {{ product.Description }}</p>
     </div>
-
 
     Price : {{product.Price}}
   </div>
